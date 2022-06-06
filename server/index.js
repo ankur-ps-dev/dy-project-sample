@@ -1,16 +1,18 @@
 const express = require("express");
 const cookieParser = require("cookie-parser");
 const axios = require("axios");
+require("dotenv").config();
 
 const app = express();
 const port = 3001;
+const API_KEY = process.env.REACT_APP_DY_API_KEY;
 
 app.use(cookieParser());
 app.use((req, res, next) => {
   console.log("Hello");
   const dyCookie = req.cookies["_dyid"];
   res.cookie("_dyid_server", dyCookie, {
-    expires: new Date(new Date().getTime() + 31540000000000),
+    maxAge: 31540000000,
   });
   next();
 });
@@ -56,8 +58,7 @@ app.get("/", async (req, res) => {
     url: "https://dy-api.eu/v2/feeds/104512/bulk",
 
     headers: {
-      "DY-API-key":
-        "ac3ea3bafa12579059172b4b4534a8df906e1a9517c80001af7577a5715f9cf6",
+      "DY-API-key": API_KEY,
 
       "Content-Type": "application/json",
     },

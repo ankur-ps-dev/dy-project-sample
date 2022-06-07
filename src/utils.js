@@ -3,6 +3,18 @@ export function setDYContext({type, data}) {
     window.DY.recommendationContext = { type: type, data: data };
   }
 
+  export function setDYConcent(type) {
+    window.DY = window.DY || {API: () => console.log("API Not Found")};
+    switch(type){
+        case "OPTIN": return  window.DY.API('consent_optin')
+        default : return  window.DY.API('consent_optout')
+    }
+  }
+  export function updateDYConcent(status) {
+    window.DY = window.DY || {API: () => console.log("API Not Found")};
+    window.DY.API('consent_status_update', { status });
+  }
+
 export function getPageName(page) {
     switch(page) {
         case "/" : return {type: "HOMEPAGE"};

@@ -12,7 +12,7 @@ import { selectCurrentUser } from "./redux/user/user.selectors";
 import Spinner from "./components/spinner/spinner.component";
 import ErrorBoundary from "./components/error-boundary/error-boundary.component";
 
-import {setDYContext, getPageName} from "./utils"
+import {setDYContext, getPageName, setDYConcent, updateDYConcent} from "./utils"
 
 const HomePage = lazy(() => import("./pages/homepage/homepage.components"));
 const ShopPage = lazy(() => import("./pages/shop/shop.component"));
@@ -22,7 +22,10 @@ const SignInAndSignUpPage = lazy(() =>
 const CheckoutPage = lazy(() => import("./pages/checkout/checkout.components"));
 
 const WrapRoute = ( {location: {pathname}} ) => {
-  useEffect(()=> setDYContext(getPageName(pathname)), [pathname])
+  console.log("===> ", process.env.REACT_APP_CONCENT_TYPE)
+  useEffect(()=> {
+    setDYContext(getPageName(pathname))
+    setDYConcent("OPTIN")}, [pathname])
   
   return (<div>
 <Route exact={true} path="/" component={HomePage} />

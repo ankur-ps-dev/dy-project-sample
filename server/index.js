@@ -6,6 +6,7 @@ require("dotenv").config();
 const app = express();
 const port = 3001;
 const API_KEY = process.env.REACT_APP_DY_API_KEY;
+const API_KEY_EXPERIENCE = process.env.REACT_APP_DY_API_KEY_EXPERIENCE;
 
 app.use(cookieParser());
 app.use((req, res, next) => {
@@ -18,48 +19,34 @@ app.use((req, res, next) => {
 });
 
 app.get("/", async (req, res) => {
-  const data = JSON.stringify({
-    requests: [
+  console.log("===> ",API_KEY)
+  const data = {
+    "user": {
+      "dyid": "-4350463893986789401",
+      "dyid_server": "-4350463893986789401"
+    },
+    "session": { "dy": "ohyr6v42l9zd4bpinnvp7urjjx9lrssw" },
+    "events": [
       {
-        id: "21",
-
-        action: "update",
-
-        body: {
-          data: {
-            sku: "21",
-
-            group_id: "50",
-
-            url: "https://www.google.com/1",
-
-            name: "20 Indian Recipe Chicken Sausages",
-
-            price: 35,
-
-            in_stock: true,
-
-            image_url: "https://picsum.photos/200/300",
-
-            categories: "Fresh Food|Meat|Sausages",
-
-            color: "green",
-
-            hfss: true,
-          },
-        },
-      },
-    ],
-  });
+        "name": "Add to Cart",
+        "properties": {
+          "dyType": "add-to-cart-v1",
+          "value": 39.95,
+          "currency": "GBP",
+          "productId": "item-34454ga",
+          "quantity": 1
+        }
+      }
+    ]
+  };
 
   const config = {
     method: "post",
 
-    url: "https://dy-api.eu/v2/feeds/104512/bulk",
+    url: "https://dy-api.eu/v2/collect/user/event",
 
     headers: {
-      "DY-API-key": API_KEY,
-
+      "DY-API-key": API_KEY_EXPERIENCE,
       "Content-Type": "application/json",
     },
 
@@ -74,8 +61,13 @@ app.get("/", async (req, res) => {
   //     .catch(function (error) {
   //       console.log(error);
   //     });
-  const resp = await axios(config);
-  console.log(resp);
+  try {
+    const resp = await axios(config);
+    console.log(resp);
+  } catch(err) {
+    console.log("===> ", err)
+  }
+  
   res.send("Hello World!");
 });
 app.get("/test", (req, res) => {

@@ -1,4 +1,4 @@
-import { Component, lazy, Suspense } from "react";
+import { Component, lazy, Suspense, useEffect } from "react";
 import { Route, Switch, Redirect } from "react-router-dom";
 
 import Header from "./components/header/header.components";
@@ -12,12 +12,23 @@ import { selectCurrentUser } from "./redux/user/user.selectors";
 import Spinner from "./components/spinner/spinner.component";
 import ErrorBoundary from "./components/error-boundary/error-boundary.component";
 
+import {setDYContext, getPageName} from "./utils"
+
 const HomePage = lazy(() => import("./pages/homepage/homepage.components"));
 const ShopPage = lazy(() => import("./pages/shop/shop.component"));
 const SignInAndSignUpPage = lazy(() =>
   import("./pages/sign-in-and-sign-up/sign-in-and-sign-up.components")
 );
 const CheckoutPage = lazy(() => import("./pages/checkout/checkout.components"));
+
+const WrapRoute = ( {location: {pathname}} ) => {
+  useEffect(()=> setDYContext(getPageName(pathname)), [pathname])
+  
+  return (<div>
+<Route exact={true} path="/" component={HomePage} />
+<Route path="/shop" component={ShopPage} />
+<Route exact={true} path="/checkout" component={CheckoutPage}  />
+</div>)};
 
 class App extends Component {
   unsubscriptFromAuth = null;
@@ -52,9 +63,7 @@ class App extends Component {
         <Switch>
           <ErrorBoundary>
             <Suspense fallback={<Spinner />}>
-              <Route exact path="/" component={HomePage} />
-              <Route path="/shop" component={ShopPage} />
-              <Route exact path="/checkout" component={CheckoutPage} />
+              <Route path="/" component={WrapRoute} />
               <Route
                 path="/signin"
                 render={() =>

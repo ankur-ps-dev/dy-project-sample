@@ -25,7 +25,8 @@ const WrapRoute = ( {location: {pathname}} ) => {
   console.log("===> ", process.env.REACT_APP_CONCENT_TYPE)
   useEffect(()=> {
     setDYContext(getPageName(pathname))
-    setDYConcent("OPTIN")}, [pathname])
+   // setDYConcent("OPTIN")
+  }, [pathname])
   
   return (<div>
 <Route exact={true} path="/" component={HomePage} />
